@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'linux' }
+  agent {}
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
@@ -12,17 +12,17 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker build -t darinpope/java-web-app:latest .'
+        bat 'docker build -t darinpope/java-web-app:latest .'
       }
     }
     stage('Login') {
       steps {
-        sh 'echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com'
+        bat 'echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com'
       }
     }
     stage('Push to Heroku registry') {
       steps {
-        sh '''
+        bat '''
           docker tag darinpope/java-web-app:latest registry.heroku.com/$APP_NAME/web
           docker push registry.heroku.com/$APP_NAME/web
         '''
